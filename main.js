@@ -17,7 +17,7 @@ function initializeGame(options) {
   let highscore = localStorage.getItem('highscore') || 0;
   let speed = options.shouldSpeedUp ? 250 : 125; // Adjust initial speed based on the shouldSpeedUp option
   let minimumSpeed = 50; // Minimum limit for the speed
-  let tailSize = options.longTail ? 32 : 1; // Adjust initial tail length based on the longTail option
+  let tailSize = options.tailSize || 1; // Set initial tail size based on the tailSize option
 
   onkeydown = ({key}) => [dx,dy] =
     { [key]: [dx,dy], ArrowRight:[dx||1, 0], ArrowLeft:[dx||-1, 0] ,
@@ -38,7 +38,21 @@ function initializeGame(options) {
                    Math.floor(Math.random()*gridSize) ];
       while(snake.some(seg => ""+seg == apple));
       score++;
-      if (options.longTail) tailSize = Math.max(1, tailSize - 1); // decrease tail size if longTail option is set
+
+      // Update tail size based on tailBehavior
+      switch(options.tailBehavior) {
+        case 'decreasing':
+          tailSize = Math.max(1, tailSize - 1);
+          break;
+        case 'classic':
+          tailSize = score + 1;
+          break;
+        case 'fixed':
+          break;
+        default:
+          tailSize = score + 1;
+      }
+
       document.getElementById("score").innerText = `Score: ${score}`;
       if (score > highscore) {
         highscore = score;
@@ -59,7 +73,7 @@ function initializeGame(options) {
     else if (snake.slice(1).some(seg => ""+seg == [nx, ny])) {
       snake = [[8,8]]; // reset snake
       score = 0; // reset score
-      if (options.longTail) tailSize = 32; // reset tail size if longTail option is set
+      tailSize = options.tailSize || 1; // reset tail size based on the tailSize option
       [dx, dy] = [0, 0]; // reset direction
       document.getElementById("score").innerText = `Score: ${score}`;
       if(options.shouldSpeedUp) {
