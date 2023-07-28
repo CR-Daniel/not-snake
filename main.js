@@ -26,16 +26,26 @@ function initializeGame(options) {
   let game = setInterval(updateGame, speed);
 
   function updateGame() {
-    let nx = (snake[0][0] + dx) & 15;
-    let ny = (snake[0][1] + dy) & 15;
+    let nx = (snake[0][0] + dx);
+    let ny = (snake[0][1] + dy);
+
+    // Check for boundary collision if bounded is set to true
+    if (options.bounded && (nx < 0 || nx >= gridSize || ny < 0 || ny >= gridSize)) {
+      resetGame();
+      return;
+    }
+
+    if (!options.bounded) {
+      nx = nx & 15;
+      ny = ny & 15;
+    }
 
     if (dx || dy) {
       snake.unshift([nx, ny]); // add new head to snake
     }
 
-    if(""+[nx,ny] == apple) {
-      do apple = [ Math.floor(Math.random()*gridSize) ,
-                   Math.floor(Math.random()*gridSize) ];
+    if ("" + [nx,ny] == apple) {
+      do apple = [Math.floor(Math.random()*gridSize), Math.floor(Math.random()*gridSize)];
       while(snake.some(seg => ""+seg == apple));
       score++;
 
@@ -70,17 +80,9 @@ function initializeGame(options) {
         game = setInterval(updateGame, speed);
       }
     }
-    else if (snake.slice(1).some(seg => ""+seg == [nx, ny])) {
-      snake = [[8,8]]; // reset snake
-      score = 0; // reset score
-      tailSize = options.tailSize || 1; // reset tail size based on the tailSize option
-      [dx, dy] = [0, 0]; // reset direction
-      document.getElementById("score").innerText = `Score: ${score}`;
-      if(options.shouldSpeedUp) {
-        speed = 250;
-        clearInterval(game);
-        game = setInterval(updateGame, speed);
-      }
+    else if (snake.slice(1).some(seg => "" + seg == [nx, ny])) {
+      resetGame();
+      return;
     }
     while (snake.length > tailSize) {
       snake.pop();
@@ -90,5 +92,18 @@ function initializeGame(options) {
     ctx.fillRect(apple[0]*cellSize, apple[1]*cellSize, cellSize, cellSize);
     ctx.fillStyle = "lime";
     snake.forEach(([x,y]) => ctx.fillRect(x*cellSize, y*cellSize, cellSize, cellSize));
+  }
+
+  function resetGame() {
+    snake = [[8,8]]; // reset snake
+    score = 0; // reset score
+    tailSize = options.tailSize || 1; // reset tail size based on the tailSize option
+    [dx, dy] = [0, 0]; // reset direction
+    document.getElementById("score").innerText = `Score: ${score}`;
+    if(options.shouldSpeedUp) {
+      speed = 250;
+      clearInterval(game);
+      game = setInterval(updateGame, speed);
+    }
   }
 }
