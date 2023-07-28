@@ -1,0 +1,89 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #072142 0%, #072142 70%, #0a3463 100%);
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+  
+body::before {
+    background-color: #008080;
+    background-image: linear-gradient(135deg, #008080 25%, transparent 25%),
+                      linear-gradient(225deg, #008080 25%, transparent 25%),
+                      linear-gradient(315deg, #008080 25%, transparent 25%),
+                      linear-gradient(45deg, #008080 25%, transparent 25%);
+}
+  
+@keyframes squares {
+    to {
+      transform: rotate(1turn) scale(1.5);
+    }
+}
+  
+#scoreboard {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 80vh;
+    margin-bottom: 20px;
+    font-size: 18px;
+    z-index: 2;
+}
+
+@keyframes pulse {
+    0% {
+      box-shadow: 0px 0px 25px 8px rgba(255, 255, 255, 0.15);
+    }
+    50% {
+      box-shadow: 0px 0px 28px 9px rgba(255, 255, 255, 0.18);
+    }
+    100% {
+      box-shadow: 0px 0px 25px 8px rgba(255, 255, 255, 0.15);
+    }
+  }
+  
+#canvas {
+    border: 1px solid #fff;
+    background: rgba(0,0,0,0.5);
+    z-index: 2;
+    box-shadow: 0px 0px 25px 8px rgba(255, 255, 255, 0.15);
+}
+  
+.pulse {
+    animation: pulse 0.75s;
+}
+
+.games-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2vw;  /* Adjust gap size relative to viewport width */
+  margin-top: 2vw;  /* Adjust margin-top relative to viewport width */
+}
+
+.game-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10vw;  /* Adjust button width relative to viewport width */
+  height: 10vw;  /* Adjust button height relative to viewport width */
+  border: 1px solid #fff;
+  box-shadow: 0px 0px 20px 5px rgba(255, 255, 255, 0.1);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  text-decoration: none;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;  /* Add transition for transform */
+  border-radius: 20px;
+  transform: scale(1);  /* Start at normal size */
+}
+
+.game-button:hover {
+  box-shadow: 0px 0px 30px 10px rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);  /* Grow when hovered */
+}
