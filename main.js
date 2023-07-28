@@ -12,7 +12,7 @@ function initializeGame(options) {
   `;
 
   let ctx = canvas.getContext("2d");
-  let snake = [[8,8]], apple = [4,4], [dx,dy] = [0,0];
+  let snake = [[8,8]], apple = spawnApple(), [dx,dy] = [0,0];
   let score = 0;
   let highscore = localStorage.getItem('highscore') || 0;
   let speed = options.shouldSpeedUp ? 250 : 125; // Adjust initial speed based on the shouldSpeedUp option
@@ -24,6 +24,32 @@ function initializeGame(options) {
                       ArrowDown: [0, dy||1], ArrowUp:  [0, dy||-1] }[key];
   
   let game = setInterval(updateGame, speed);
+
+  function spawnApple() {
+    switch(options.appleSpawn) {
+      case 'edges':
+        let edge = Math.floor(Math.random() * 4);
+        switch(edge) {
+          case 0: return [0, Math.floor(Math.random() * gridSize)]; // Left edge
+          case 1: return [gridSize-1, Math.floor(Math.random() * gridSize)]; // Right edge
+          case 2: return [Math.floor(Math.random() * gridSize), 0]; // Top edge
+          case 3: return [Math.floor(Math.random() * gridSize), gridSize-1]; // Bottom edge
+        }
+        break;
+      case 'corners':
+        let corner = Math.floor(Math.random() * 4);
+        switch(corner) {
+          case 0: return [0, 0]; // Top-left corner
+          case 1: return [gridSize-1, 0]; // Top-right corner
+          case 2: return [0, gridSize-1]; // Bottom-left corner
+          case 3: return [gridSize-1, gridSize-1]; // Bottom-right corner
+        }
+        break;
+      default:
+        // Default to spawning apple randomly anywhere on the grid
+        return [Math.floor(Math.random()*gridSize), Math.floor(Math.random()*gridSize)];
+    }
+  }
 
   function updateGame() {
     let nx = (snake[0][0] + dx);
@@ -45,7 +71,8 @@ function initializeGame(options) {
     }
 
     if ("" + [nx,ny] == apple) {
-      do apple = [Math.floor(Math.random()*gridSize), Math.floor(Math.random()*gridSize)];
+      apple = spawnApple();  // Spawn a new apple
+      do apple = spawnApple();
       while(snake.some(seg => ""+seg == apple));
       score++;
 
@@ -96,6 +123,7 @@ function initializeGame(options) {
 
   function resetGame() {
     snake = [[8,8]]; // reset snake
+    apple = spawnApple(); // reset apple
     score = 0; // reset score
     tailSize = options.tailSize || 1; // reset tail size based on the tailSize option
     [dx, dy] = [0, 0]; // reset direction
