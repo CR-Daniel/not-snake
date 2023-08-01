@@ -30,7 +30,7 @@
       
         var button = document.createElement('button');
         button.innerHTML = version.name + "<br/>High Score: " + (localStorage.getItem(version.name) || 0);
-        button.className = 'game-button' + (localStorage.getItem(version.name) > 32 ? ' high-score' : '');
+        button.className = 'game-button' + (localStorage.getItem(version.name) > 12 ? ' high-score' : '');
         button.onclick = function(e) {
             e.preventDefault();
             startGame(version.options, version.name);
