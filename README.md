@@ -1,6 +1,8 @@
 # Snake Game Variations
 
-This project features a variety of snake game versions that can be played in the browser.
+[NotSnake](https://cr-daniel.github.io/not-snake/) features a variety of snake game versions that can be played in the browser.
+
+![](gameplay.gif)
 
 ## Features
 
