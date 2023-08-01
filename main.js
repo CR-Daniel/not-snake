@@ -1,4 +1,4 @@
-function initializeGame(options) {
+function initializeGame(options, versionName) {
   let gridSize = 16;
   let canvasSize = Math.min(window.innerWidth, window.innerHeight) * 0.5;
   let cellSize = canvasSize / gridSize;
@@ -14,7 +14,7 @@ function initializeGame(options) {
   let ctx = canvas.getContext("2d");
   let snake = [[8,8]], apple = spawnApple(), toxicApples = [], [dx,dy] = [0,0];
   let score = 0;
-  let highscore = localStorage.getItem('highscore') || 0;
+  let highscore = localStorage.getItem(versionName) || 0;
   let speed = options.shouldSpeedUp ? 250 : 125;
   let minimumSpeed = 50;
   let tailSize = options.tailSize || 1;
@@ -107,7 +107,7 @@ function initializeGame(options) {
       document.getElementById("score").innerText = `Score: ${score}`;
       if (score > highscore) {
         highscore = score;
-        localStorage.setItem('highscore', highscore);
+        localStorage.setItem(versionName, highscore);
         document.getElementById("highscore").innerText = `High Score: ${highscore}`;
       }
       document.getElementById('canvas').classList.add('pulse');

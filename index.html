@@ -6,16 +6,51 @@
     <script type="text/javascript" src="main.js"></script>
   </head>
   <body>
+    <div id="gameList" class="button-container"></div>
+    <div id="gameContainer"></div>
     <script>
-        initializeGame({
-            shouldSpeedUp: true,
-            tailSize: 1,
-            tailBehavior: 'classic',
-            bounded: true,
-            //appleSpawn: 'edges',
-            tailVisible: true,
-            toxicApples: 6
-        })
+      var gameVersions = [
+        {name: 'Just the usual.',                                             options: {shouldSpeedUp: false, tailSize: 1, tailBehavior: 'classic', bounded: false, tailVisible: true, toxicApples: 0}},
+        {name: 'Now with bounds.',                                            options: {shouldSpeedUp: false, tailSize: 1, tailBehavior: 'classic', bounded: true, tailVisible: true, toxicApples: 0}},
+        {name: 'What if there are 3 toxic apples everytime?',                 options: {shouldSpeedUp: false, tailSize: 1, tailBehavior: 'classic', bounded: true, tailVisible: true, toxicApples: 3}},
+        {name: 'What about 6?',                                               options: {shouldSpeedUp: false, tailSize: 1, tailBehavior: 'classic', bounded: true, tailVisible: true, toxicApples: 6}},
+        {name: 'Maybe 12?',                                                   options: {shouldSpeedUp: false, tailSize: 1, tailBehavior: 'classic', bounded: true, tailVisible: true, toxicApples: 12}},
+        {name: 'Too much? What about just having a long tail forever?',       options: {shouldSpeedUp: false, tailSize: 32, tailBehavior: 'fixed', bounded: true, tailVisible: true, toxicApples: 0}},
+        {name: 'What about having the tail decrease when you eat the apple?', options: {shouldSpeedUp: false, tailSize: 32, tailBehavior: 'decreasing', bounded: true, tailVisible: true, toxicApples: 0}},
+        {name: 'What if the tail is invisble?',                               options: {shouldSpeedUp: false, tailSize: 1, tailBehavior: 'classic', bounded: true, tailVisible: false, toxicApples: 0}},
+        {name: 'Do you like speed?',                                          options: {shouldSpeedUp: true, tailSize: 1, tailBehavior: 'classic', bounded: true, tailVisible: true, toxicApples: 0}},
+        {name: 'Remember toxic apples?',                                      options: {shouldSpeedUp: true, tailSize: 1, tailBehavior: 'classic', bounded: true, tailVisible: true, toxicApples: 6}},
+      ];
+
+      var gameList = document.getElementById('gameList');
+
+      gameVersions.forEach(function(version, index) {
+        var buttonWrapper = document.createElement('div');
+        buttonWrapper.className = 'button-wrapper';
+      
+        var button = document.createElement('button');
+        button.innerHTML = version.name + "<br/>High Score: " + (localStorage.getItem(version.name) || 0);
+        button.className = 'game-button' + (localStorage.getItem(version.name) > 32 ? ' high-score' : '');
+        button.onclick = function(e) {
+            e.preventDefault();
+            startGame(version.options, version.name);
+        };
+        
+        buttonWrapper.appendChild(button);
+        gameList.appendChild(buttonWrapper);
+      });
+
+      function startGame(options, versionName) {
+        var gameContainer = document.getElementById('gameContainer');
+
+        // Create a new script element to start the game
+        var script = document.createElement('script');
+        script.textContent = `initializeGame(${JSON.stringify(options)}, '${versionName}')`;
+
+        // Clear the game container and append the new script
+        gameContainer.innerHTML = '';
+        gameContainer.appendChild(script);
+      }
     </script>
   </body>
 </html>
